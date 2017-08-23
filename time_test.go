@@ -2,6 +2,7 @@ package iso8601_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
 	"strconv"
 	"testing"
@@ -36,6 +37,7 @@ func secOffset(hour, minute int) int {
 	return (hour*60 + minute) * 60
 }
 
+// nolint
 func TestLayout(t *testing.T) {
 	cases := map[string]struct {
 		exp    string
@@ -220,7 +222,7 @@ func TestUnmarshall_Error(t *testing.T) {
 	}
 }
 
-func TestMarshall(t *testing.T) {
+func TestMarshal(t *testing.T) {
 	cases := map[string]struct {
 		tick   time.Time
 		expect string
@@ -259,4 +261,15 @@ func TestMarshall(t *testing.T) {
 			}
 		})
 	}
+}
+
+func ExampleTime() {
+	t := time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", 7*60*60))
+	bd := body{OccuredOn: iso8601.Time(t)}
+	b, err := json.Marshal(bd)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println(string(b))
+	// Output: {"occuredOn":"2017-01-15T20:11:45.245+07:00"}
 }
