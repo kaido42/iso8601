@@ -1,6 +1,7 @@
 package iso8601_test
 
 import (
+	"encoding/json"
 	"math"
 	"strconv"
 	"testing"
@@ -148,6 +149,71 @@ func TestLayout_Err(t *testing.T) {
 	for k, v := range cases {
 		t.Run(k, func(t *testing.T) {
 			_, err := time.Parse(iso8601.Layout, v)
+			if err == nil {
+				t.Error("Expecting error for exp:", v)
+			}
+		})
+	}
+}
+
+type event struct {
+	Name      string       `json:"name"`
+	OccuredOn iso8601.Time `json:"occuredOn"`
+}
+
+func TestUnmarshall(t *testing.T) {
+	expect := timePart{2017, time.August, 23, 01, 24, 48, nanoFrac(756), secOffset(7, 0)}
+	jsonBody := `{"name": "Sign in", "occuredOn": "2017-08-23T01:24:48.756+07:00"}`
+	var e event
+	if err := json.Unmarshal([]byte(jsonBody), &e); err != nil {
+		t.Error("err:", err)
+	}
+
+	parsed := time.Time(e.OccuredOn)
+	if got, want := parsed.Year(), expect.year; got != want {
+		t.Error("year got:", got, "want:", want)
+	}
+
+	if got, want := parsed.Month(), expect.month; got != want {
+		t.Error("month got:", got, "want:", want)
+	}
+
+	if got, want := parsed.Day(), expect.day; got != want {
+		t.Error("day got:", got, "want:", want)
+	}
+
+	if got, want := parsed.Hour(), expect.hour; got != want {
+		t.Error("hour got:", got, "want:", want)
+	}
+
+	if got, want := parsed.Minute(), expect.minute; got != want {
+		t.Error("minute got:", got, "want:", want)
+	}
+
+	if got, want := parsed.Second(), expect.second; got != want {
+		t.Error("second got:", got, "want:", want)
+	}
+
+	if got, want := parsed.Nanosecond(), expect.nanosec; got != want {
+		t.Error("nano got:", got, "want:", want)
+	}
+
+	if got, want := zoneOffset(parsed), expect.offset; got != want {
+		t.Error("month got:", got, "want:", want)
+	}
+}
+
+func TestUnmarshall_Error(t *testing.T) {
+	cases := map[string]string{
+		"Invalid date time format":      `{"name": "Sign in", "occuredOn": "2017-08-23 01:24:48 +07:00"}`,
+		"Empty date time":               `{"name": "Sign in", "occuredOn": ""}`,
+		"Empty with space on date time": `{"name": "Sign in", "occuredOn": " "}`,
+	}
+
+	for k, v := range cases {
+		t.Run(k, func(t *testing.T) {
+			var e event
+			err := json.Unmarshal([]byte(v), &e)
 			if err == nil {
 				t.Error("Expecting error for exp:", v)
 			}
