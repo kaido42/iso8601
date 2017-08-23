@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/uudashr/iso8601.svg?branch=master)](https://travis-ci.org/uudashr/iso8601)
+[![GoDoc](https://godoc.org/github.com/uudashr/iso8601?status.svg)](https://godoc.org/github.com/uudashr/iso8601)
 # ISO 8601
 
 JSON time serialization support [ISO 8601](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14) specification.
