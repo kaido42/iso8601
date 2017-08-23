@@ -226,22 +226,22 @@ func TestMarshall(t *testing.T) {
 		expect string
 	}{
 		"UTC Time": {
-			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.UTC),
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, nanoFrac(245), time.UTC),
 			expect: `{"occuredOn":"2017-01-15T20:11:45.245Z"}`,
 		},
 
 		"+00:00 offset": {
-			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", 0)),
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, nanoFrac(245), time.FixedZone("any", 0)),
 			expect: `{"occuredOn":"2017-01-15T20:11:45.245Z"}`,
 		},
 
 		"+07:00 offset": {
-			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", secOffset(7, 0))),
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, nanoFrac(245), time.FixedZone("any", secOffset(7, 0))),
 			expect: `{"occuredOn":"2017-01-15T20:11:45.245+07:00"}`,
 		},
 
 		"-07:00 offset": {
-			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", secOffset(-7, 0))),
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, nanoFrac(245), time.FixedZone("any", secOffset(-7, 0))),
 			expect: `{"occuredOn":"2017-01-15T20:11:45.245-07:00"}`,
 		},
 	}
