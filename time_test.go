@@ -253,6 +253,7 @@ func TestMarshall(t *testing.T) {
 				t.Error("err:", err)
 				t.FailNow()
 			}
+
 			if got, want := string(b), v.expect; got != want {
 				t.Error("got:", got, "want:", want)
 			}

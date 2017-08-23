@@ -10,8 +10,29 @@ JSON time serialization support [ISO 8601](https://xml2rfc.tools.ietf.org/public
 Use the time Layout (same with time.RFC3339Nano)
 
 ```golang
+import "time"
+
 func parseTime(s string) (t time.Time, err error) {
     t, err = time.Parse(iso8601.Layout, s)
     return
 }
+```
+
+Use it on struct
+```golang
+import (
+    "fmt"
+	"json"
+	"time"
+)
+
+type Event struct {
+    Name string `json:"name"`
+    OccuredOn iso8601.Time `json:"occuredOn"`
+}
+
+now := time.Now()
+event := Event {Name: "Sign In", iso8601.Time(now)}
+b, _ := json.Marshall(event)    
+fmt.Println(string(b)) // show the marshalled struct
 ```
