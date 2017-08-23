@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// Layout of iso 8601 date time format.
-const Layout = "2006-01-02T15:04:05.999999999Z07:00"
+// Layout of iso 8601 date time format, it use RFC3339 spec on golang time.
+const Layout = time.RFC3339Nano
 
 // Time with json marshal and unmarshal capability of iso 8601 format.
 type Time time.Time
