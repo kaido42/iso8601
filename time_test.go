@@ -156,20 +156,19 @@ func TestLayout_Err(t *testing.T) {
 	}
 }
 
-type event struct {
-	Name      string       `json:"name"`
+type body struct {
 	OccuredOn iso8601.Time `json:"occuredOn"`
 }
 
 func TestUnmarshall(t *testing.T) {
 	expect := timePart{2017, time.August, 23, 01, 24, 48, nanoFrac(756), secOffset(7, 0)}
-	jsonBody := `{"name": "Sign in", "occuredOn": "2017-08-23T01:24:48.756+07:00"}`
-	var e event
-	if err := json.Unmarshal([]byte(jsonBody), &e); err != nil {
+	jsonBody := `{"occuredOn": "2017-08-23T01:24:48.756+07:00"}`
+	var b body
+	if err := json.Unmarshal([]byte(jsonBody), &b); err != nil {
 		t.Error("err:", err)
 	}
 
-	parsed := time.Time(e.OccuredOn)
+	parsed := time.Time(b.OccuredOn)
 	if got, want := parsed.Year(), expect.year; got != want {
 		t.Error("year got:", got, "want:", want)
 	}
@@ -205,17 +204,57 @@ func TestUnmarshall(t *testing.T) {
 
 func TestUnmarshall_Error(t *testing.T) {
 	cases := map[string]string{
-		"Invalid date time format":      `{"name": "Sign in", "occuredOn": "2017-08-23 01:24:48 +07:00"}`,
-		"Empty date time":               `{"name": "Sign in", "occuredOn": ""}`,
-		"Empty with space on date time": `{"name": "Sign in", "occuredOn": " "}`,
+		"Invalid date time format":      `{"occuredOn": "2017-08-23 01:24:48 +07:00"}`,
+		"Empty date time":               `{"occuredOn": ""}`,
+		"Empty with space on date time": `{"occuredOn": " "}`,
 	}
 
 	for k, v := range cases {
 		t.Run(k, func(t *testing.T) {
-			var e event
-			err := json.Unmarshal([]byte(v), &e)
+			var b body
+			err := json.Unmarshal([]byte(v), &b)
 			if err == nil {
 				t.Error("Expecting error for exp:", v)
+			}
+		})
+	}
+}
+
+func TestMarshall(t *testing.T) {
+	cases := map[string]struct {
+		tick   time.Time
+		expect string
+	}{
+		"UTC Time": {
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.UTC),
+			expect: `{"occuredOn":"2017-01-15T20:11:45.245Z"}`,
+		},
+
+		"+00:00 offset": {
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", 0)),
+			expect: `{"occuredOn":"2017-01-15T20:11:45.245Z"}`,
+		},
+
+		"+07:00 offset": {
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", secOffset(7, 0))),
+			expect: `{"occuredOn":"2017-01-15T20:11:45.245+07:00"}`,
+		},
+
+		"-07:00 offset": {
+			tick:   time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", secOffset(-7, 0))),
+			expect: `{"occuredOn":"2017-01-15T20:11:45.245-07:00"}`,
+		},
+	}
+	for k, v := range cases {
+		t.Run(k, func(t *testing.T) {
+			bd := body{OccuredOn: iso8601.Time(v.tick)}
+			b, err := json.Marshal(bd)
+			if err != nil {
+				t.Error("err:", err)
+				t.FailNow()
+			}
+			if got, want := string(b), v.expect; got != want {
+				t.Error("got:", got, "want:", want)
 			}
 		})
 	}
