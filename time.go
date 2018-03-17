@@ -9,7 +9,9 @@ import (
 const Layout = time.RFC3339Nano
 
 // Time with json marshal and unmarshal capability of iso 8601 format.
-type Time time.Time
+type Time struct {
+	time.Time
+}
 
 // UnmarshalJSON implements the json.Unmarshaller interface.
 func (jt *Time) UnmarshalJSON(b []byte) error {
@@ -22,13 +24,13 @@ func (jt *Time) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	*jt = Time(parsed)
+	jt.Time = parsed
 	return nil
 }
 
 // MarshalJSON implements the json.Marshaller interface.
 func (jt Time) MarshalJSON() ([]byte, error) {
-	t := time.Time(jt)
+	t := jt.Time
 	if y := t.Year(); y < 0 || y >= 10000 {
 		return nil, errors.New("iso8601: year outside of range [0,9999]")
 	}

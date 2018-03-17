@@ -170,7 +170,7 @@ func TestUnmarshall(t *testing.T) {
 		t.Error("err:", err)
 	}
 
-	parsed := time.Time(b.OccuredOn)
+	parsed := b.OccuredOn
 	if got, want := parsed.Year(), expect.year; got != want {
 		t.Error("year got:", got, "want:", want)
 	}
@@ -199,7 +199,7 @@ func TestUnmarshall(t *testing.T) {
 		t.Error("nano got:", got, "want:", want)
 	}
 
-	if got, want := zoneOffset(parsed), expect.offset; got != want {
+	if got, want := zoneOffset(parsed.Time), expect.offset; got != want {
 		t.Error("month got:", got, "want:", want)
 	}
 }
@@ -249,7 +249,7 @@ func TestMarshal(t *testing.T) {
 	}
 	for k, v := range cases {
 		t.Run(k, func(t *testing.T) {
-			bd := body{OccuredOn: iso8601.Time(v.tick)}
+			bd := body{OccuredOn: iso8601.Time{Time:v.tick}}
 			b, err := json.Marshal(bd)
 			if err != nil {
 				t.Error("err:", err)
@@ -265,7 +265,7 @@ func TestMarshal(t *testing.T) {
 
 func ExampleTime() {
 	t := time.Date(2017, time.January, 15, 20, 11, 45, 245000000, time.FixedZone("any", 7*60*60))
-	bd := body{OccuredOn: iso8601.Time(t)}
+	bd := body{OccuredOn: iso8601.Time{Time:t}}
 	b, err := json.Marshal(bd)
 	if err != nil {
 		fmt.Println("err:", err)
