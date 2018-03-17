@@ -8,7 +8,7 @@ JSON time serialization support [ISO 8601](https://xml2rfc.tools.ietf.org/public
 time.Time type embedded into iso8601.Time - easier to work with when mostly using for unmarshalling json
 
 ## Installation
-`go get github.com/uudashr/iso8601`
+`go get github.com/kaido42/iso8601`
 
 ## Usage
 Use the time Layout (same with time.RFC3339Nano)
