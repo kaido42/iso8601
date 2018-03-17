@@ -4,6 +4,7 @@
 forked from: https://godoc.org/github.com/uudashr/iso8601
 
 JSON time serialization support [ISO 8601](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14) specification.
+
 time.Time type embedded into iso8601.Time - easier to work with when mostly using for unmarshalling json
 
 ## Installation
