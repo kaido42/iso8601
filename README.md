@@ -41,6 +41,7 @@ fmt.Println(string(b)) // show the marshalled struct
 Unmarshal into struct
 ```golang
 import (
+    "time"
 )
 
 type Event struct {
@@ -50,7 +51,7 @@ type Event struct {
 
 source := "{\"name\":\"test\",\"occuredOn\":\"2002-10-02T10:00:00-05:00\"}"
 var event Event
-unMarshal(source, &event)
+json.Unmarshal(source, &event)
 
 fmt.Prinln("occured at unixtime: %d", event.OccuredOn.Unix())
 
