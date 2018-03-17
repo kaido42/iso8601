@@ -23,8 +23,8 @@ Use it on struct
 ```golang
 import (
     "fmt"
-	"json"
-	"time"
+    "json"
+    "time"
 )
 
 type Event struct {
@@ -33,7 +33,25 @@ type Event struct {
 }
 
 now := time.Now()
-event := Event {Name: "Sign In", iso8601.Time(now)}
-b, _ := json.Marshall(event)    
+event := Event {Name: "Sign In", iso8601.Time(Time:now)}
+b, _ := json.Marshal(event)    
 fmt.Println(string(b)) // show the marshalled struct
+```
+
+Unmarshal into struct
+```golang
+import (
+)
+
+type Event struct {
+    Name string `json:"name"`
+    OccuredOn iso8601.Time `json:"occuredOn"`
+}
+
+source := "{\"name\":\"test\",\"occuredOn\":\"2002-10-02T10:00:00-05:00\"}"
+var event Event
+unMarshal(source, &event)
+
+fmt.Prinln("occured at unixtime: %d", event.OccuredOn.Unix())
+
 ```
