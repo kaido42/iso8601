@@ -1,8 +1,10 @@
-[![Build Status](https://travis-ci.org/uudashr/iso8601.svg?branch=master)](https://travis-ci.org/uudashr/iso8601)
-[![GoDoc](https://godoc.org/github.com/uudashr/iso8601?status.svg)](https://godoc.org/github.com/uudashr/iso8601)
+[![GoDoc](https://godoc.org/github.com/kaido42/iso8601?status.svg)](https://godoc.org/github.com/kaido42/iso8601)
 # ISO 8601
 
+forked from: https://godoc.org/github.com/uudashr/iso8601
+
 JSON time serialization support [ISO 8601](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14) specification.
+time.Time type embedded into iso8601.Time - easier to work with when mostly using for unmarshalling json
 
 ## Installation
 `go get github.com/uudashr/iso8601`
